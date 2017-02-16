@@ -1,0 +1,116 @@
+<html>
+	<head>
+		<script src="angular.min.js"></script>
+		<script src="angular-google-maps.min.js"></script>
+		<script 
+			  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGDU3B__kRlpzryA45I_jdhnM6848bm-I&callback">
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+		<script src="ng-haversine.min.js"></script>
+		<script src="main.js"></script>
+
+		<style>
+				.angular-google-map-container {
+					width: 40%; 
+					float:left; 
+					height: 100%;
+				}
+				
+				.buttons {
+					font-size: 20px;
+					center: 0px; 
+				}
+				
+				.wrap {
+					width: 60%;
+					float: right;
+				}
+
+				.wrap table {
+					width: 500px;
+					table-layout: fixed;
+				}
+
+				table tr td {
+					padding: 5px;
+					width: 500px;
+					word-wrap: break-word;
+				}
+
+				table.head tr td {
+					background: #eee;
+					overflow-y: auto;
+					padding: 5px;
+					border: 1px solid #eee;
+					width: 500px;
+				}
+
+				.inner_table {
+					height: 90%;
+					width: 500px;
+					overflow-y: auto;
+				}
+				
+				.inner_table tr:nth-child(odd) {
+					background: #ccc;
+				}
+		</style>
+	</head>
+	<body>
+			<div ng-app="myApp" ng-controller="gmapCtrl">
+				<ui-gmap-google-map zoom="5" style="height:90%" center='map.center' >
+				<ui-gmap-markers models="markers" coords="'self'" icon="'icon'" 
+                       options="'options'" >
+				</ui-gmap-markers>
+				</ui-gmap-google-map>
+	
+				<div class="wrap">
+					
+				 <div class="inner_table" id="it">
+					<table id = "tt">
+						<thead>
+							<tr>
+								<th st-sort="marker" colspan="1">Mile Marker</th>
+								<th st-sort="lat" colspan="1">Latitude</th>
+								<th st-sort="lon" colspan="1">Longitude</th>
+								<th st-sort="function" colspan="2">Function</th>
+							</tr>
+						</thead>	
+						 <tr data-ng-repeat="(markerIndex, marker) in markers">
+							<td>
+                                <div ng-hide="viewField">{{marker.title}}</div>
+                                <div ng-show="modifyField"><input type="text" ng-model="marker.title" /></div>
+                            </td>
+							<td>
+                                <div ng-hide="viewField">{{marker.latitude}}</div>
+                                <div ng-show="modifyField"><input type="text" ng-model="marker.latitude" /></div>
+                            </td>
+							<td>
+                                <div ng-hide="viewField">{{marker.longitude}}</div>
+                                <div ng-show="modifyField"><input type="text" ng-model="marker.longitude" /></div>
+                            </td>
+							<td>
+								<button ng-hide="viewField" ng-click="modify(marker)">Modify</button>
+								<button ng-show="modifyField" ng-click="update(marker)">Update</button>
+			       			</td>
+							<td>
+								<button type="submit" ng-click="deleteValues(markerIndex)">Delete</button>
+                 			</td>
+						</tr> 
+					</table >
+					</div>
+			    </div>
+				<div class="buttons">
+					<button type="submit" ng-click="loadValues()" >Load PCT</button>
+					<button type="submit" ng-click="add()" >Add</button>
+				</br>
+					<small id="ShortestDistance"></small>
+					<small id="lat"></small>
+					<small id="lon"></small>
+					</br>
+					Latitude:<input type='text' ng-model="lat"/> Longitude:<input type='text' ng-model="lon"/>
+					<button type="button" ng-click='findNearest(lat,lon)'>Find Nearest</button>
+				</div>	
+		</div>
+	</body>
+</html>
